@@ -13,6 +13,10 @@ import java.util.*;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+import org.checkerframework.checker.index.qual.*;
+
+
 /*
     how to generate a token in small lenght
     use ascii reporesentation 
@@ -147,9 +151,12 @@ public class Main {
         return getDecodedValueUsingRotateList(keyList, value, i,  j);
     }
 
+
+    @SuppressWarnings("cast")
     public static int getEncodedValueUsingRotateList(ArrayList<Integer> keyList, int value, int i, int j){
         int count = i+j;
-        int toOut = keyList.get((value+count)%256);
+        int index =  (@NonNegative @LTLengthOf(value = "keyList", offset = {}) int) ((value+count)%256);
+        int toOut = keyList.get(index);
         return toOut;
 
     }
@@ -228,7 +235,7 @@ public class Main {
         return pixelEncodeValue;
     }
 
-
+    @SuppressWarnings("cast")
     public static void encodeImage(String path, String token){
         BufferedImage img = null;
         File f = null;
@@ -246,7 +253,9 @@ public class Main {
         encodeImage(img,pixelEncodeValue);
         try{
             f.delete();
-            File file = new File(path.substring(0,path.lastIndexOf(".")+1)+"png");
+            int lastIndex = (@NonNegative @LTEqLengthOf("path") int)(path.lastIndexOf(".")+1);  // LTEqLengthOf used
+            // because of this index is going to be used in substring operation.
+            File file = new File(path.substring(0,lastIndex)+"png");
             ImageIO.write(img, "png", file);
 
         }catch(IOException e){
@@ -287,6 +296,7 @@ public class Main {
         }
     }
 
+    @SuppressWarnings("cast")  // if conditions made sure that integer is within the 128 range so we can suppress cast warning.
     public static String createSmallTokenString(ArrayList<Integer> pixelEncodeValue){
 
         String token = "";
@@ -309,16 +319,20 @@ public class Main {
         return token;
     }
 
+    @SuppressWarnings("cast") // all pointer values are integer by its type originally so the warnings here are
+    // false positive we can suppress these warnings.
     public static  ArrayList<Integer> getEncodeIntegersArrayList(String key){
         ArrayList<Integer> intArr = new ArrayList<Integer>();
         int len = key.length();
         int pointer = 0;
         while(true){
             int p = pointer;
-            if(key.charAt(pointer) == '~'){
+            if(key.charAt((@NonNegative @LTLengthOf("key") int) pointer) == '~'){   // NonNegative and lesser than
+                // Length will make sure we will be having a index within range
                 if(pointer < (len - 1)){
                     if(key.charAt(pointer+1) == '~'){
-                        int c = key.charAt(pointer + 2);
+                        int c = key.charAt((@NonNegative @LTLengthOf("key") int)(pointer + 2));  // same as above
+                        // usage of annotations
                         intArr.add((126 + 126 + c - 33 - 33 -33));
                         pointer = pointer + 3;
                     }
@@ -333,7 +347,7 @@ public class Main {
                 }
             }
             else{
-                int c = key.charAt(pointer);
+                int c = key.charAt((@NonNegative @LTLengthOf("key") int) pointer);
                 intArr.add(( c - 33));
                 pointer = pointer + 1; 
             }
