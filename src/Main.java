@@ -141,38 +141,12 @@ public class Main {
     }
     public static int getEncodedValue(ArrayList<Integer> keyList, int value, int i, int j){
         return getEncodedValueUsingRotateList(keyList, value, i,  j);
-        /**
-        int val;
-        if(i+j%2 == 0){
-            val =  keyList.get(value);
-        }
-        else{
-            val = keyList.get(255-value);
-        }
-
-        int confusion = (i+j)%1;
-        int toOut = keyList.get(val);
-        for(int m = 0; m < confusion; m++){
-            toOut = keyList.get(toOut);
-        }
-        return toOut;**/
     }
 
     public static int getDecodedValue(ArrayList<Integer> keyList, int value, int i, int j){
         return getDecodedValueUsingRotateList(keyList, value, i,  j);
-        /**int confusion = (i+j)%1;
-        int toOut = keyList.indexOf(value);
-        for(int m = 0; m < confusion; m++){
-            toOut = keyList.indexOf(toOut);
-        }
-        if(i+j%2 == 0){
-            return keyList.indexOf(toOut);
-        }
-        else{
-            return 255 - keyList.indexOf(toOut);
-        }**/
-
     }
+
     public static int getEncodedValueUsingRotateList(ArrayList<Integer> keyList, int value, int i, int j){
         int count = i+j;
         int toOut = keyList.get((value+count)%256);
@@ -253,80 +227,8 @@ public class Main {
         }
         return pixelEncodeValue;
     }
-    public static String createToken(ArrayList<Integer> pixelEncodeValue){
-        String token = "";
-        for(int i : pixelEncodeValue){
-            if(i>127){
-                token+=((char)127);
-                token+=((char)(i-127));
-            }
-            else{
-                token+=((char)0);
-                token+=((char)i);
-            }
 
-        }
-        return token;
-    }
-    public static ArrayList<Integer> defuseToken(String token){
-        ArrayList<Integer> keyFromToken = new ArrayList<>();
-        for(int i = 0; i<256*2; i++){
-            if(i%2==1){
-                continue;
-            }
-            keyFromToken.add(token.charAt(i)+token.charAt(i+1));
 
-        }
-        return keyFromToken;
-    }
-    public static String createExactToken(ArrayList<Integer> pixelEncodeValue){
-        String token = "";
-        for(int i : pixelEncodeValue){
-            token+=String.format("%03d", i);
-
-        }
-        return token;
-    }
-    public static ArrayList<Integer> defuseExactToken(String exactToken){
-        ArrayList<Integer> toOutList = new ArrayList<>();
-        for(int i = 0; i< 256*3; i++){
-            if(i%3 == 0) {
-                toOutList.add(Integer.parseInt(exactToken.substring(i, i + 3)));
-            }
-        }
-        return toOutList;
-    }
-    public static ArrayList<Integer> generatePixelEncodeValueList(String password){
-        ArrayList<String> list = new ArrayList<>();
-        permutation(password,list);
-        ArrayList<Integer> originalList = new ArrayList(list);
-        Collections.sort(list);
-        ArrayList<Integer> encodeValueList = new ArrayList<>();
-        for(int i = 0; i<256; i++){
-            encodeValueList.add(list.indexOf(originalList.get(i)));
-        }
-        return encodeValueList;
-    }
-    public static void permutation(String str,ArrayList<String> list) {
-        permutation("", str,list);
-    }
-
-    private static void permutation(String prefix, String str, ArrayList<String> list) {
-        int n = str.length();
-        if(list.size() == 256){
-            return;
-        }
-        if (n == 0) {
-            if(!list.contains(prefix))
-            {
-                list.add(prefix);
-            }
-        }
-        else {
-            for (int i = 0; i < n; i++)
-                permutation(prefix + str.charAt(i), str.substring(0, i) + str.substring(i+1, n),list);
-        }
-    }
     public static void encodeImage(String path, String token){
         BufferedImage img = null;
         File f = null;
