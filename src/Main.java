@@ -45,7 +45,7 @@ public class Main {
         frame.setResizable(false);
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout());
-        JLabel label = new JLabel("<html><br><br><br>Paste your token here : </html>");
+        JLabel label = new JLabel("<html><br><br><br>Paste your token here (length must be > 7 ): </html>");
         JButton buttonEncode = new JButton();
         JTextField textField = new JTextField("",40);
         JCheckBox exchangingCard1 = new JCheckBox("Check this box for higher security");
@@ -60,11 +60,10 @@ public class Main {
         });
         buttonEncode.setText("Encode");
         buttonEncode.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!exchangingCard1.isSelected()){
-
+                if(exchangingCard1.isSelected()){
+                    // Should develop rotation encoding functionality init code here
                 }
                 else{
                     if(textField.getText().length()>7){
@@ -83,8 +82,8 @@ public class Main {
         buttonDecode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(!exchangingCard1.isSelected()){
-
+                if(exchangingCard1.isSelected()){
+                    // Should develop rotation encoding functionality init code here
                 }
                 else {
                     if (textField.getText().length() > 7) {
@@ -119,7 +118,13 @@ public class Main {
             }
         });
         //panel.add(label);
-        JLabel labelForInstruction = new JLabel("<html>Step 1: If you have A token You can paste that on the token<br> area and encode your image files with encode button.<br><br>Step 2: If you want to decode an image, you need to paste<br> the currect token, which you used to decode the same image.<br><br>Step 3: If you need new token for encoding simply <br>click generate btn and copy token from generated token area.<br><br>Note: If you loose your token, there is no way to recover your <br> original image.</html>");
+        JLabel labelForInstruction = new JLabel("<html>Step 1: If you have A token You can paste that on the token <br>" +
+            " area and encode your image files with encode button.<br><br>Step 2: If you want to decode an image," +
+            " you need to paste<br> the currect token, which you used to encode the same image.<br><br>" +
+            "Step 3: If you need new token for encoding simply <br>" +
+            "click generate btn and copy token from generated token area.<br><br>" +
+            "Note: If you loose your token, there is no way to recover your <br> " +
+            "original image.</html>");
         panel.add(label);
         panel.add(textField);
         panel.add(buttonEncode);
@@ -134,6 +139,12 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        // the following functionalities are under development.
+        labelForInstruction.setVisible(false);
+        buttonCopyLast.setVisible(false);
+        buttonTokenGen.setVisible(false);
+        labelToken.setVisible(false);
+        exchangingCard1.setVisible(false);
         Random rand = new Random();
 
         
